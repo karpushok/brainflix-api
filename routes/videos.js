@@ -19,7 +19,6 @@ router.use((req, res, next) => {
   } else {
     res.status(401).json({message: 'Please register!'})
   }
-
 })
 
 //route videos
@@ -35,13 +34,10 @@ router.route('/').post((req, res) => {
   })
 
 //route videos:id
-
 router.route('/:id').get((req, res) => {
   const videos = require('../data/videos.json')
   const findVideo = videos[registeredUser].find((video) => video.id === req.params.id)
-
   res.status(200).json(findVideo)
 })
-
 
 module.exports = router
