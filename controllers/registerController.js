@@ -1,6 +1,7 @@
 const fsPromises = require('fs').promises
 const path = require('path')
 const uuid = require('uuid')
+const videos = require('../data/videos.json')
 
 const userDB = {
   users: require('../data/registration.json'),
@@ -15,15 +16,17 @@ const handleNewRegistration = (req, res) => {
     
     userDB.setRegistration([...userDB.users, newUUID])
 
-    //write to DB
+    //create user and save id
     fsPromises.writeFile(path.join(__dirname, '..', 'data', 'registration.json'), JSON.stringify(userDB.users))
 
-    res.status(201).json({api_key: newUUID})
+    res.status(201).json({ api_key: newUUID })
+    
+    //create user videos from default set by user id
+    fsPromises.writeFile(path.join(__dirname, '..', 'data', 'videos.json'), JSON.stringify({...videos, [newUUID]: videos.default}))
 
   } catch (error) {
     res.status(500).json({'message': error.message})
   }
-
 }
 
-module.exports = {handleNewRegistration}
+module.exports = {handleNewRegistration, userDB}
