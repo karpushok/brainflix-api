@@ -1,6 +1,8 @@
 const express = require ('express');
 const dotenv = require('dotenv')
 const videos = require('./routes/videos')
+const register = require('./routes/register')
+
 dotenv.config()
 
 const PORT = process.env.PORT || 4444;
@@ -11,7 +13,7 @@ app.use(express.json())
 
 //handle routes
 app.use('/videos', videos)
-
+app.use('/register', register)
 
 app.get('/', (req, res) => {
     res.json({
