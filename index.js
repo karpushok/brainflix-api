@@ -26,21 +26,3 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server starting on port ${PORT}`);
 });
-
-
-
-// const express = require('express');
-// const path = require('path');
-
-// const app = express();
-// const port = 8080;
-
-// // Указывает путь к папке, содержащей фотографии на сервере
-// const imagesPath = path.join(__dirname, 'assets/images');
-
-// // Middleware для обслуживания статических файлов
-// app.use(express.static(imagesPath));
-
-// app.listen(port, () => {
-//   console.log(`Сервер запущен на порту ${port}`);
-// });

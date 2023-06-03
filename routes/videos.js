@@ -27,7 +27,10 @@ router.use((req, res, next) => {
 //route videos
 router.route("/").get((req, res) => {
   const videos = require("../data/videos.json");
-  res.status(200).json(videos[registeredUser]);
+  const findUserById = videos["videoDetails"].find( user => user[registeredUser] !== undefined )
+  
+
+  res.status(200).json(findUserById[registeredUser]);
 });
 
 //post
@@ -37,10 +40,20 @@ router.route("/").post((req, res) => {
 
 //route videos:id
 router.route("/:id").get((req, res) => {
-  const videos = require("../data/videoDetails.json");
-  const findVideo = videos[registeredUser].find(
-    (video) => video.id === req.params.id
-  );
+  const videos = require("../data/videos.json");
+
+  const findUserById = videos["videoDetails"].find( user => user[registeredUser] !== undefined )
+
+  console.log(`videos.js - line: 50 ->> findUserById`, findUserById, Array.isArray(findUserById))
+
+  const findVideo = findUserById[registeredUser].find((video) => video.id === req.params.id);
+
+  //TODO 
+  /**
+    * add status 404 if record by such id is not found
+    **/
+
+
   res.status(200).json(findVideo);
 });
 
