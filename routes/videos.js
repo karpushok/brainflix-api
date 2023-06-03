@@ -43,7 +43,7 @@ router.route("/").get((req, res) => {
   res.status(200).json(findUserById[registeredUser]);
 });
 
-//post
+//post comment
 router.route("/:id/comments").post((req, res) => {
   const objComment = {
     "comment": "...",
@@ -86,6 +86,45 @@ router.route("/:id/comments").post((req, res) => {
 
   res.status(200).json(commentTemplate);
 });
+
+
+//delete comment
+router.route("/:id/comments/:commentId").delete((req, res) => {
+
+  const videos = require("../data/videos.json");
+
+  const findUserById = videos["videoDetails"].find( user => user[registeredUser] !== undefined )
+
+  const findVideo = findUserById[registeredUser].find((video) => video.id === req.params.id);
+
+  const findCommentIdx = findVideo.comments.findIndex((comment) => comment.id === req.params.commentId)
+
+  if (findCommentIdx !== -1) {
+    
+    findVideo.comments.splice(findCommentIdx, 1)
+
+    const updatedUsers = videos.videoDetails.map((user) => {
+      if (user[registeredUser] !== undefined) {
+        return findUserById
+      }
+      return user
+    })
+  
+    const updatedVideos = {...videos, videoDetails: updatedUsers }
+  
+    //save updated user data
+    fsPromises.writeFile(
+      path.join(__dirname, "..", "data", "videos.json"),
+      JSON.stringify(updatedVideos)
+    );
+
+    res.status(200).json(findVideo[findCommentIdx])
+
+  } else {
+    res.status(404).json({message: 'Not found'})
+  }
+
+})
 
 //route videos:id
 router.route("/:id").get((req, res) => {
