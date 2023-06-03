@@ -99,7 +99,7 @@ router.route( "/" ).post( async ( req, res ) => {
     "likes": "0",
     "duration": "4:01",
     "video": "https://project-2-api.herokuapp.com/stream",
-    "timestamp": Math.floor(Date.now()),
+    "timestamp": Date.now(),
     "comments": []
   }
 

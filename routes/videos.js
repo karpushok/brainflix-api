@@ -3,6 +3,10 @@ const router = express.Router();
 const uuid = require("uuid");
 const { userDB } = require("../controllers/registerController");
 
+const fs = require( 'fs' );
+const fsPromises = require("fs").promises;
+const path = require("path");
+
 let registeredUser = "";
 
 // middleware for validation
@@ -40,8 +44,47 @@ router.route("/").get((req, res) => {
 });
 
 //post
-router.route("/").post((req, res) => {
-  res.send("POST /videos");
+router.route("/:id/comments").post((req, res) => {
+  const objComment = {
+    "comment": "...",
+    "name": "Guest"
+  }
+  
+  const { comment, name } = req.body
+
+  const commentTemplate = {
+
+    "id": uuid.v4(),
+    "name": name,
+    "comment": comment,
+    "likes": 0,
+    "timestamp": Date.now()
+  }
+
+  const videos = require("../data/videos.json");
+
+  const findUserById = videos["videoDetails"].find( user => user[registeredUser] !== undefined )
+
+  const findVideo = findUserById[registeredUser].find((video) => video.id === req.params.id);
+
+  findVideo.comments.push(commentTemplate)
+
+  const updatedUsers = videos.videoDetails.map((user) => {
+    if (user[registeredUser] !== undefined) {
+      return findUserById
+    }
+    return user
+  })
+
+  const updatedVideos = {...videos, videoDetails: updatedUsers }
+
+  //save updated user data
+  fsPromises.writeFile(
+    path.join(__dirname, "..", "data", "videos.json"),
+    JSON.stringify(updatedVideos)
+  );
+
+  res.status(200).json(commentTemplate);
 });
 
 //route videos:id
@@ -49,8 +92,6 @@ router.route("/:id").get((req, res) => {
   const videos = require("../data/videos.json");
 
   const findUserById = videos["videoDetails"].find( user => user[registeredUser] !== undefined )
-
-  console.log(`videos.js - line: 50 ->> findUserById`, findUserById, Array.isArray(findUserById))
 
   const findVideo = findUserById[registeredUser].find((video) => video.id === req.params.id);
 
