@@ -24,7 +24,7 @@ const handleNewRegistration = (req, res) => {
     fsPromises.writeFile(
       path.join(__dirname, "..", "data", "videos.json"),
       JSON.stringify(updatedVideos)
-    ).then(() => {});
+    );
 
     
     // //create user videos from default set by user id

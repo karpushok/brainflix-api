@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const videos = require("./routes/videos");
 const register = require("./routes/register");
+const upload = require("./routes/upload");
 const path = require('path');
 
 dotenv.config();
@@ -15,6 +16,7 @@ app.use(express.json());
 //handle routes
 app.use("/videos", videos);
 app.use("/register", register);
+app.use("/upload", upload)
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.get("/", (req, res) => {

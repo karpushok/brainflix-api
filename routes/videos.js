@@ -6,6 +6,12 @@ const { userDB } = require("../controllers/registerController");
 let registeredUser = "";
 
 // middleware for validation
+
+//TODO 
+/**
+  * put in a separate middleware folder
+  **/
+
 router.use((req, res, next) => {
   // have registration? req api_key?
   // have user in videos.json
