@@ -67,24 +67,28 @@ router.route("/:id/comments").post((req, res) => {
 
   const findVideo = findUserById[registeredUser].find((video) => video.id === req.params.id);
 
-  findVideo.comments.push(commentTemplate)
+  if (findVideo) {
+    findVideo.comments.push(commentTemplate)
 
-  const updatedUsers = videos.videoDetails.map((user) => {
-    if (user[registeredUser] !== undefined) {
-      return findUserById
-    }
-    return user
-  })
-
-  const updatedVideos = {...videos, videoDetails: updatedUsers }
-
-  //save updated user data
-  fsPromises.writeFile(
-    path.join(__dirname, "..", "data", "videos.json"),
-    JSON.stringify(updatedVideos)
-  );
-
-  res.status(200).json(commentTemplate);
+    const updatedUsers = videos.videoDetails.map((user) => {
+      if (user[registeredUser] !== undefined) {
+        return findUserById
+      }
+      return user
+    })
+  
+    const updatedVideos = {...videos, videoDetails: updatedUsers }
+  
+    //save updated user data
+    fsPromises.writeFile(
+      path.join(__dirname, "..", "data", "videos.json"),
+      JSON.stringify(updatedVideos)
+    );
+  
+    res.status(200).json(commentTemplate);
+  } else {
+    res.status(404).json({message: 'Not found'})
+  }
 });
 
 
@@ -134,13 +138,38 @@ router.route("/:id").get((req, res) => {
 
   const findVideo = findUserById[registeredUser].find((video) => video.id === req.params.id);
 
-  //TODO 
-  /**
-    * add status 404 if record by such id is not found
-    **/
+  console.log(`videos.js - line: 141 ->> findVideo`, findVideo.id)
 
+  if (findVideo) {
+    console.log(`videos.js - line: 142 ->> findUserById.views`, findVideo.views)
+    
+    //!!FIXME ReactJS mounts and unmounts component two times, because of this views are incremented by two
 
-  res.status(200).json(findVideo);
+    findVideo.views = Number(findVideo.views) + 1
+    
+    console.log(`videos.js - line: 142 ->> findUserById.views`, findVideo.views)
+
+    const updatedUsers = videos.videoDetails.map((user) => {
+      if (user[registeredUser] !== undefined) {
+        return findUserById
+      }
+      return user
+    })
+  
+    const updatedVideos = {...videos, videoDetails: updatedUsers }
+  
+    //save updated user data
+    fsPromises.writeFile(
+      path.join(__dirname, "..", "data", "videos.json"),
+      JSON.stringify(updatedVideos)
+    );
+
+    res.status(200).json(findVideo);
+  
+  } else {
+    res.status(404).json({message: 'Not found'})
+  }
+
 });
 
 module.exports = router;
