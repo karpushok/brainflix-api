@@ -91,6 +91,40 @@ router.route("/:id/comments").post((req, res) => {
   }
 });
 
+//post video like
+router.route("/:id/like").post((req, res) => {
+
+
+  const videos = require("../data/videos.json");
+
+  const findUserById = videos["videoDetails"].find( user => user[registeredUser] !== undefined )
+
+  const findVideo = findUserById[registeredUser].find((video) => video.id === req.params.id);
+
+  if (findVideo) {
+    findVideo.likes = Number(findVideo.likes) + 1;
+
+    const updatedUsers = videos.videoDetails.map((user) => {
+      if (user[registeredUser] !== undefined) {
+        return findUserById
+      }
+      return user
+    })
+  
+    const updatedVideos = {...videos, videoDetails: updatedUsers }
+  
+    //save updated user data
+    fsPromises.writeFile(
+      path.join(__dirname, "..", "data", "videos.json"),
+      JSON.stringify(updatedVideos)
+    );
+  
+    res.status(200).json(findVideo);
+  } else {
+    res.status(404).json({message: 'Not found'})
+  }
+});
+
 
 //delete comment
 router.route("/:id/comments/:commentId").delete((req, res) => {
@@ -127,7 +161,6 @@ router.route("/:id/comments/:commentId").delete((req, res) => {
   } else {
     res.status(404).json({message: 'Not found'})
   }
-
 })
 
 //route videos:id
