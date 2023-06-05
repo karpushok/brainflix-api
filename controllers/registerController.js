@@ -10,7 +10,7 @@ const userDB = {
   },
 };
 
-let updatedVideos = {}
+let updatedVideos = {};
 
 const handleNewRegistration = (req, res) => {
   try {
@@ -18,7 +18,11 @@ const handleNewRegistration = (req, res) => {
 
     userDB.setRegistration([...userDB.users, newUUID]);
 
-    updatedVideos = {...videos, registration: userDB.users, videoDetails: [{[newUUID]: videos.videoDetailsDefault}] }
+    updatedVideos = {
+      ...videos,
+      registration: userDB.users,
+      videoDetails: [{ [newUUID]: videos.videoDetailsDefault }],
+    };
 
     //create user and save id
     fsPromises.writeFile(
@@ -26,21 +30,7 @@ const handleNewRegistration = (req, res) => {
       JSON.stringify(updatedVideos)
     );
 
-    
-    // //create user videos from default set by user id
-    // fsPromises.writeFile(
-    //   path.join(__dirname, "..", "data", "videos.json"),
-    //   JSON.stringify({ ...videos, 
-    //     videoDetails: [{[newUUID]: videos.videoDetailsDefault}]
-    //   })
-    //   );
-      
     res.status(201).json({ api_key: newUUID });
-    // //create user videosdetails from default set by user id
-    // fsPromises.writeFile(
-    //   path.join(__dirname, "..", "data", "videoDetails.json"),
-    //   JSON.stringify({...videoDetails, [newUUID]: videoDetails.default})
-    // )
 
   } catch (error) {
     res.status(500).json({ message: error.message });
