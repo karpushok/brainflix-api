@@ -12,6 +12,7 @@ const app = express();
 
 // middleware to work wtih json
 app.use(express.json());
+app.use( express.urlencoded( {extended: true} ) );
 
 //handle routes
 app.use("/videos", videos);

@@ -171,17 +171,9 @@ router.route("/:id").get((req, res) => {
 
   const findVideo = findUserById[registeredUser].find((video) => video.id === req.params.id);
 
-  console.log(`videos.js - line: 141 ->> findVideo`, findVideo.id)
-
   if (findVideo) {
-    console.log(`videos.js - line: 142 ->> findUserById.views`, findVideo.views)
-    
-    //!!FIXME ReactJS mounts and unmounts component two times, because of this views are incremented by two
-
     findVideo.views = Number(findVideo.views) + 1
     
-    console.log(`videos.js - line: 142 ->> findUserById.views`, findVideo.views)
-
     const updatedUsers = videos.videoDetails.map((user) => {
       if (user[registeredUser] !== undefined) {
         return findUserById
